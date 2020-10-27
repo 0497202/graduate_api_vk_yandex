@@ -85,8 +85,8 @@ class YaUploader:
     # Creat folder method
     def create_folder(self, dir_name):
         self.dir_name = dir_name
-        response = requests.put('https://cloud-api.yandex.net/v1/disk/resources',\
-        params={"path":self.dir_name},\
+        response = requests.put('https://cloud-api.yandex.net/v1/disk/resources',
+        params={"path":self.dir_name},
         headers={"Authorization": f"OAuth {TOKEN_YAN}"})
         print(f'\nпапка {self.dir_name} успешно создана.')
 
@@ -108,17 +108,19 @@ class YaUploader:
         files={"file": open(f'{file_folder}/{file_name}', "rb")},\
         headers={"Authorization": f"OAuth {self.token}"})
 
-        return f'Ваш {file_name} , был успешно загружен'
+        print(f'Ваш {file_name} , был успешно загружен')
 
 # JSON file create with result of programm
 def json_create(photo_jpg, full_list):
     type_list = full_list[2]
     res = {}
+    res_list = []
     with open("result.json", "w") as write_file:
         for id, photo in enumerate(photo_jpg):
             res['file_name'] = photo_jpg[id]
             res['size'] = type_list[id]
-            json.dump(res, write_file)
+            res_list.append(res)
+        json.dump(res_list, write_file, ensure_ascii=False)
     print(f'Информация о загруженных файлах успешно записана в json файл.')
 
 # Main programm
@@ -138,14 +140,14 @@ if __name__ == '__main__':
     # Create vk_photos folder on yandex disc
     dir_name = input('Введите имя папки для создания на яндекс диске: ')
     while not dir_name:
-        if not dir_name:
-            print('\nИмя папки не задано!')
-            dir_name = input('\n\nВведите имя папки для создания на яндекс диске: ')
+        print('\nИмя папки не задано!')
+        dir_name = input('\n\nВведите имя папки для создания на яндекс диске: ')
     uploader.create_folder(dir_name)
 
     # Create folder on PC
     file_folder = input('Введите название папки куда сохранятся фото на ваш ПК: ')
-    os.mkdir(file_folder)
+    # os.mkdir(file_folder)
+    os.makedirs(file_folder, mode = 0o777, exist_ok = False)
     print(f'\n{file_folder} на компьютере успешно создана.')
 
     # Get full list
@@ -156,16 +158,12 @@ if __name__ == '__main__':
     # all files to list
     files = os.listdir(file_folder)
 
-    # Filter list
+    # Load to Yandex disc
     photo_jpg = []
     for photo in files:
-        if photo.endswith('.jpg'):
-            photo_jpg.append(photo)
-
-    # Load to Yandex disc
-    for photo in photo_jpg:
+        photo_jpg.append(photo)
         result = uploader.upload(dir_name, file_folder, photo)
-        print(result)
+        # print(result)
     print(f'\nВсе ваши файлы были успешно загружены в папку\
     {dir_name} на яндекс диске.')
 
