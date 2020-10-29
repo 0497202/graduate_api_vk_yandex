@@ -43,7 +43,6 @@ class VKApiClient:
 
         # Make full list
         all_lst = [[], [], []]
-        # Make list of src
         items = response.json()['response']['items']
         for item in items:
             # src list
