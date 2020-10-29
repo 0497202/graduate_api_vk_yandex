@@ -2,3 +2,4 @@
 *.json
 *.txt
 vk_photos/
+.idea/
