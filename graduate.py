@@ -58,13 +58,9 @@ class VKApiClient:
         return all_lst  # [src_list, like_list, size_list]
 
     def save_vk_photos_pc(self, lst):
-        # List of src
-        photo_list = []
-        for src in lst[0]:
-            photo_list.append(src['src'])
         # Write photos on PC
-        for num, jpg in enumerate(photo_list[: self.count]):
-            r = requests.get(jpg)
+        for num, jpg in enumerate(lst[0][: self.count]):
+            r = requests.get(jpg['src'])
             print(f'{num + 1} - фотография скачана из вконтатке на ваш ПК')
             with open(f'{file_folder}/' + str(lst[1][num]) + '.jpg', 'wb') as f:
                 f.write(r.content)
