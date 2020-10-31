@@ -49,7 +49,7 @@ class VKApiClient:
             all_lst[0].append(item['sizes'][-1])
             # like list
             if item['likes']['count'] in all_lst[1]:
-                all_lst[1].append(datetime.date.today())
+                all_lst[1].append(str(datetime.date.today()))
             else:
                 all_lst[1].append(item['likes']['count'])
             # size list
